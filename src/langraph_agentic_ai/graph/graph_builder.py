@@ -1,10 +1,13 @@
 from langgraph.graph import StateGraph, START, END
-from src.langraph_agentic_ai.state import State
+from src.langraph_agentic_ai.state.state import State
+from src.langraph_agentic_ai.nodes.basic_chatbot_node import BasicChatbotNode
+
 
 class GraphBuilder:
-    def __init__(self, model):
+    def __init__(self, model, use_case):
         self.model = model
         self.graph_builder = StateGraph(State)
+        self.use_case = use_case
     
     def basic_chatbot_graph(self):
         """
@@ -14,6 +17,16 @@ class GraphBuilder:
             entry and exit point of the graph.
         """
 
-        self.graph_builder.add_node("chatbot", "")
+        chatbot_node = BasicChatbotNode(self.model)
+        self.graph_builder.add_node("chatbot", chatbot_node.process)
         self.graph_builder.add_edge(START, "chatbot")
         self.graph_builder.add_edge("chatbot", END)
+
+    def setup_graph(self):
+        """
+        Sets up the graph for the selected use case.
+        """
+        if self.use_case == "Basic Chatbot":
+            self.basic_chatbot_graph()
+        
+        return self.graph_builder.compile()

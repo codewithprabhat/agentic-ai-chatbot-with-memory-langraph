@@ -1,4 +1,4 @@
-from src.langraph_agentic_ai.state import State
+from src.langraph_agentic_ai.state.state import State
 
 
 class BasicChatbotNode:
